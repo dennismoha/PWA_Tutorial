@@ -1,0 +1,45 @@
+[debug] [2020-12-09T11:39:07.829Z] ----------------------------------------------------------------------
+[debug] [2020-12-09T11:39:07.838Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\moha\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2020-12-09T11:39:07.840Z] CLI Version:   8.16.2
+[debug] [2020-12-09T11:39:07.840Z] Platform:      win32
+[debug] [2020-12-09T11:39:07.840Z] Node Version:  v12.16.3
+[debug] [2020-12-09T11:39:07.844Z] Time:          Wed Dec 09 2020 14:39:07 GMT+0300 (East Africa Time)
+[debug] [2020-12-09T11:39:07.845Z] ----------------------------------------------------------------------
+[debug] [2020-12-09T11:39:07.845Z] 
+[debug] [2020-12-09T11:39:07.882Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[debug] [2020-12-09T11:39:08.035Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-12-09T11:39:08.038Z] > authorizing via signed-in user
+[debug] [2020-12-09T11:39:08.039Z] [iam] checking project pwa-sample-70362 for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2020-12-09T11:39:08.049Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2020-12-09T11:39:08.050Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2020-12-09T11:39:08.116Z] [iam] error while checking permissions, command may fail: FirebaseError: Authentication Error: Your credentials are no longer valid. Please run firebase login --reauth
+
+For CI servers and headless environments, generate a new token with firebase login:ci
+[debug] [2020-12-09T11:39:08.117Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2020-12-09T11:39:08.117Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2020-12-09T11:39:08.121Z] Authentication Error: Your credentials are no longer valid. Please run firebase login --reauth
+
+For CI servers and headless environments, generate a new token with firebase login:ci
+[debug] [2020-12-09T11:39:08.122Z] FirebaseError: Authentication Error: Your credentials are no longer valid. Please run firebase login --reauth
+
+For CI servers and headless environments, generate a new token with firebase login:ci
+    at Object.<anonymous> (C:\Users\moha\AppData\Roaming\npm\node_modules\firebase-tools\lib\auth.js:23:32)
+    at Module._compile (internal/modules/cjs/loader.js:1133:30)
+    at Object.Module._extensions..js (internal/modules/cjs/loader.js:1153:10)
+    at Module.load (internal/modules/cjs/loader.js:977:32)
+    at Function.Module._load (internal/modules/cjs/loader.js:877:14)
+    at Module.require (internal/modules/cjs/loader.js:1019:19)
+    at require (internal/modules/cjs/helpers.js:77:18)
+    at Object.<anonymous> (C:\Users\moha\AppData\Roaming\npm\node_modules\firebase-tools\lib\init\features\hosting\github.js:20:16)
+    at Module._compile (internal/modules/cjs/loader.js:1133:30)
+    at Object.Module._extensions..js (internal/modules/cjs/loader.js:1153:10)
+    at Module.load (internal/modules/cjs/loader.js:977:32)
+    at Function.Module._load (internal/modules/cjs/loader.js:877:14)
+    at Module.require (internal/modules/cjs/loader.js:1019:19)
+    at require (internal/modules/cjs/helpers.js:77:18)
+    at Object.<anonymous> (C:\Users\moha\AppData\Roaming\npm\node_modules\firebase-tools\lib\init\features\hosting\index.js:7:24)
+    at Module._compile (internal/modules/cjs/loader.js:1133:30)
+[error] 
+[error] Error: Failed to get Firebase project pwa-sample-70362. Please make sure the project exists and your account has permission to access it.

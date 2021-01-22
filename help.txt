@@ -1,0 +1,148 @@
+Always add a web manifest file to the root folder
+You need to add manifest file to every view page on your browser to make sure browser is able to load manifest with additional configuration to every url you visit.
+in the manifest files, display can either be: "standalone - behaves like a native app
+                                        -full screen - where it covers the whole phone screen       
+                                        -minimal-ul - feels like a reduced native app but with reduced UI elements
+                                        -browser - it'll open like a normal webpage in the browser
+
+-> The orientation can be " any - which allows the user to choose either portrait or landscape ,
+        or either portrait or landscape,
+        portrait-primary -makes sure it doesn't switch if the user rotates the device by 180degrees"
+
+
+dir : how is your pwa aligned? either left to right or vice versa
+-->make sure to copy manifest in all the pages you are loading
+
+-->Listenable service worker events: Fetch, push notifications, notification interaction, background sync, service worker lifecycle.
+
+ //the service worker register also takes another option.the scope option that depicts which scope it should operate
+ .register('../sw.js',{scope:'/help/'}) ; it will only be operable in the help file
+
+
+ // fetch('https://httpbin.org/ip')
+//     .then((data) => { console.log('data is ', data); return data.json() })
+//     .then(datas => console.log(datas))
+//     .catch(error => console.log('error ', error));
+
+// fetch('https://httpbin.org/post', {
+//         method: "POST",
+//         headers: {
+//             'Content-Type': 'application/json',
+//             'Accept': 'application/json'
+//         },
+//         mode: 'cors', //it can also be mode:'no-cors' in order to circumvent the cors errors
+//         body: JSON.stringify({
+//             message: " this is the test body"
+//         })
+//     })
+//     .then(data => { return data.json() })
+//     .then(datass => console.log(datass.data))
+//     .catch(error => { console.log(error) })
+
+
+
+//=================================================================
+fetch('https://swapi.dev/api/planets/2/')
+    .then(data => console.log(data))
+    .catch(error => console.log(error))
+
+//====rendering a not available page /404 error page incase the network is down =====
+**create a online.html
+**copy paste from the index.html in order to maintain the skeleton lookout of the app
+**remove feed.js and feed.css in order to make the page unapdatable
+**then go to our serwice worker registration and add the './offline.html' in the list of cache.add
+**go to the fetch section and in the catch, return the offline page by first opening the cache, retrieving it using the match keyword and then returning it
+
+//================caching strategy==============
+*************** 1) cache with network fallback
+**** page sends a request to the servicec worker or we can say , the service worker intercepts any request the page sends
+** then the service worker has a look at the cache
+** if a resource is found it is directly returned and if not the service worker reaches the network which returns the response
+** then we step with the service worker and put that request in the dynamic caching. which means, any request that wasn't cached during service worker startup
+*-> will get cached in the dynamic cache which means for future requests,we can find the resource in the cache
+//=======disadvantage =========
+** for resources which should be highly upto date,we might return old versions which are still in the cache because because we don't reach out to the network by default
+*-> only if an element is not in the cache.
+
+**************** 2) cache only
+** service worker intercepts a page resource ,and then looks at the cache. if we find a resource there we return
+** it to the page.we ignore the network. Example is below
+    ``` self.addEventListener('fetch', (e) => {
+                        e.respondWith(
+                                caches.match(e.request)
+                                .then(response => {
+                                return response
+                                }).catch(error => console.log(error))
+                        );
+                        })
+                   
+** this might not be the best startegy to use or only the best for certain types of requests
+//=========disadvantage
+** not applicable for offline access due to lack of dynamic caching
+
+******************** 3) Network only
+**this is the opposite of cache only. Here we don't use a sevice worker at all but instead the page sends a request to the network
+**and we return that. example
+                self.addEventListener('fetch', (e) => {
+                e.respondWith(
+                        fetch(e.request)
+                );
+                })
+**this is only valid for limited number of resources
+
+********************* 4) Network with cache fallback
+**we catch a request in a service worker and the try to reach out to the network and only if that fetch fails
+**we reach to the assets from the cache and return the asset from the cache
+
+//===========disadvantage
+**when it comes to poor connections where  requests turn off after every short while eg 60secs, it'll take 60secs  more for it
+**to reach the cache. which results in a bad user experience
+ **===============Examples
+ self.addEventListener('fetch', (e) => {
+    e.respondWith(
+        fetch(e.request) //we first reach the internet
+        .catch((err) => { return caches.match(e.request) }) //if it fails we reach the cache
+
+    );
+})
+**==========example 2 where we can apply dynamic caching to it
+self.addEventListener('fetch', (e) => {
+    fetch(e.request)
+        .then((res) => {
+            return caches.open(dynamicCache)
+                .then((cache) => {
+                    cache.put(e.request.url, res.clone()) //preinstall the resource in the cache once we get it from the internet
+                    return res;
+                })
+        })
+    e.respondWith(
+        fetch(e.request) //we first reach the internet
+        .catch((err) => { return caches.match(e.request) }) //if it fails we reach the cache
+
+    );
+})
+
+===================== 5) cache then network
+** the idea is to get an asset as quickly as possible from the cache and then also try to fetch a more upto date version from the network
+** this way we can present something to the user quickly and still get an update version if the network is available.
+** this is an improved version of the network first callback cache version.
+** here we don't wait for something to get served from the cache, if the network is unsuccesful we have the cache and if successful we ovveride what
+** we have in the cache
+
+**####procedure #########3
+**1) page directly reaches out to the cache
+**2) we then get the value back NB: no service worker has been involved here yet
+*** we also use some variable to see if a network response is arleady there beacuase incase the network is faster than us retrieving data from cache,
+** we don't want to ovveride the network response with the cache response
+**3) we also reach out to the service worker and this happens simultaneously to the page reaching the cache
+**4) the service worker will then reach the network and try get a response from there .
+**5) (optional) the network response then goes back to the service worker and we store the response in the cache if we are using dynamic caching although it's optional
+**6) then we return the fetch data to the page
+
+**#############3 Implementation #########
+*** for this strategy we need to work in both our normal javascript files and the service workers
+**NB: json data shouldn't be stored in the cache
+
+
+
+    
